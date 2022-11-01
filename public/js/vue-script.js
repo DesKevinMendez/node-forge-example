@@ -2,16 +2,24 @@ const { createApp, setup, ref, onMounted } = Vue;
 
 const encryptedData = (text, key) => {
   let iv = forge.random.getBytesSync(16);
-  let cipher = forge.cipher.createCipher('AES-GCM', forge.util.hexToBytes(key));
+  const keyAES = forge.util.hexToBytes(key);
 
-  cipher.start({ iv: iv });
+  // ENCRYPT the text
+  let cipher = forge.cipher.createCipher('AES-GCM', keyAES);
+
+  cipher.start({ iv });
   cipher.update(forge.util.createBuffer(text));
   cipher.finish();
-  return forge.util.encode64(cipher.output.data);
+  let tag = cipher.mode.tag;
+
+  let encrypted = forge.util.encode64(cipher.output.data);
+
+  return { encrypted, tag, iv };
 };
+
 createApp({
   setup() {
-    const login = ref({ email: '', password: '' });
+    const login = ref({ email: 'kevin@test.io', password: 'password' });
     const aesKey = ref('');
 
     onMounted(async () => {
@@ -40,7 +48,10 @@ createApp({
     const sendDataEncripted = async () => {
       // ENCRYPT the text
       const base64StringCodec = encryptedData(
-        JSON.stringify(login),
+        JSON.stringify({
+          email: login.value.email,
+          password: login.value.password
+        }),
         aesKey.value
       );
 
