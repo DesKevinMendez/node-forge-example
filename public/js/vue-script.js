@@ -1,7 +1,6 @@
 const { createApp, setup, ref, onMounted } = Vue;
 
-const encryptedData = (text, key) => {
-  let iv = forge.random.getBytesSync(16);
+const encryptedData = (text, key, iv) => {
   const keyAES = forge.util.hexToBytes(key);
 
   // ENCRYPT the text
@@ -10,17 +9,21 @@ const encryptedData = (text, key) => {
   cipher.start({ iv });
   cipher.update(forge.util.createBuffer(text));
   cipher.finish();
+
   let tag = cipher.mode.tag;
 
   let encrypted = forge.util.encode64(cipher.output.data);
 
-  return { encrypted, tag, iv };
+  return { encrypted, tag };
 };
 
 createApp({
   setup() {
     const login = ref({ email: 'kevin@test.io', password: 'password' });
-    const aesKey = ref('');
+    const asimetricKey = ref({
+      iv: '',
+      aes: ''
+    });
 
     onMounted(async () => {
       let keypair;
@@ -41,18 +44,21 @@ createApp({
           'Content-Type': 'application/json'
         }
       });
-      const { aes } = await public.json();
-      aesKey.value = aes;
+      const { aes, iv } = await public.json();
+      asimetricKey.value.aes = aes;
+      asimetricKey.value.iv = iv;
     });
 
     const sendDataEncripted = async () => {
       // ENCRYPT the text
+
       const base64StringCodec = encryptedData(
         JSON.stringify({
           email: login.value.email,
           password: login.value.password
         }),
-        aesKey.value
+        asimetricKey.value.aes,
+        asimetricKey.value.iv,
       );
 
       const public = await fetch('http://localhost:3000/api/v1/decode', {

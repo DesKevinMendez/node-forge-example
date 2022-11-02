@@ -11,9 +11,9 @@ export default (fastify: FastifyInstance, _: any, done: Function) => {
       }
     }
   }>, reply: FastifyReply) => {
-    const { encrypted, tag, iv } = request.body.data
-  
-    const rp = await decriptData(encrypted, tag, iv)
+    const { encrypted, tag } = request.body.data
+
+    const rp = await decriptData(encrypted, tag, process.env.IV_ENCRIPT)
 
     return reply.send({
       data: JSON.parse(rp.data),
