@@ -58,7 +58,6 @@ createApp({
       const { encrypt } = await public.json();
 
       const { iv, key } = decryptKeys(keypair, encrypt);
-      console.log('🚀 ~ onMounted ~ iv, key', iv, key)
 
       asimetricKey.value.aes = key;
       asimetricKey.value.iv = iv;
@@ -84,7 +83,6 @@ createApp({
           'Content-Type': 'application/json'
         }
       });
-      console.log(await public.json());
     };
 
     return { login, sendDataEncrypted };

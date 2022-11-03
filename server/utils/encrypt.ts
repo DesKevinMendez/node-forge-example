@@ -9,8 +9,6 @@ export const encryptAESkey = (publicKey: string): string => {
     key: process.env.BASE_64_KEY_ENCRYPT
   }
 
-  console.log(keys);
-
   let toEncrypt = Buffer.from(JSON.stringify(keys));
 
   let encrypted = forge.util.encode64(
