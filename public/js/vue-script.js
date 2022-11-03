@@ -18,10 +18,19 @@ const encryptedData = (text, key, iv) => {
 
 const generateKeyPair = async () => {
   let keypair;
-  await forge.pki.rsa.generateKeyPair({ bits: 256, workers: 2 }, (err, k) => {
+  await forge.pki.rsa.generateKeyPair({ bits: 2048, workers: 2 }, (err, k) => {
     keypair = k;
   });
   return keypair;
+};
+
+const decriptKeys = (keypair, text) => {
+  // DECRYPT String
+  let decrypted = keypair.privateKey.decrypt(
+    forge.util.decode64(text),
+    'RSAES-PKCS1-V1_5'
+  );
+  return JSON.parse(decrypted);
 };
 
 createApp({
@@ -46,8 +55,11 @@ createApp({
           'Content-Type': 'application/json'
         }
       });
-      const { aes, iv } = await public.json();
-      asimetricKey.value.aes = aes;
+      const { encript } = await public.json();
+
+      const { iv, key } = decriptKeys(keypair, encript);
+
+      asimetricKey.value.aes = key;
       asimetricKey.value.iv = iv;
     });
 

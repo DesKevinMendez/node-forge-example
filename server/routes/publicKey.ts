@@ -1,20 +1,15 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
-import { encriptedAESkey } from '../utils/encripted'
+import { encriptAESkey } from '../utils/encript'
 
 export default (fastify: FastifyInstance, _: any, done: Function) => {
   fastify.get('/public-key', async (_: FastifyRequest, reply: FastifyReply) => {
     return { data: 'hola' }
   })
   fastify.post('/public-key', async (request: FastifyRequest<{ Body: { public: string } }>, reply: FastifyReply) => {
-
-    const pl = request.body.public
-      .replace("-----BEGIN PUBLIC KEY-----\r\n", '')
-      .replace("\r\n-----END PUBLIC KEY-----\r\n", '')
+    const aesKeyEncripted = encriptAESkey(request.body.public)
 
     return reply.send({
-      data: pl,
-      aes: await encriptedAESkey(),
-      iv: process.env.IV_ENCRIPT
+      encript: aesKeyEncripted,
     })
   })
   done()
