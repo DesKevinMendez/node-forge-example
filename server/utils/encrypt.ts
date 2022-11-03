@@ -1,12 +1,15 @@
 import forge from 'node-forge'
-export const encriptAESkey = (publicKey: string): string => {
+
+export const encryptAESkey = (publicKey: string): string => {
 
   const print = forge.pki.publicKeyFromPem(publicKey)
 
   const keys = {
-    iv: process.env.IV_ENCRIPT,
-    key: process.env.BASE_64_KEY_ENCRIPT
+    iv: process.env.IV_ENCRYPT,
+    key: process.env.BASE_64_KEY_ENCRYPT
   }
+
+  console.log(keys);
 
   let toEncrypt = Buffer.from(JSON.stringify(keys));
 

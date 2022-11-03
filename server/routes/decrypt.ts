@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify'
 import { util } from 'node-forge'
-import { decriptData } from '../utils/decript'
+import { decryptData } from '../utils/decrypt'
 
 export default (fastify: FastifyInstance, _: any, done: Function) => {
   fastify.post('/decode', async (request: FastifyRequest<{
@@ -13,7 +13,8 @@ export default (fastify: FastifyInstance, _: any, done: Function) => {
   }>, reply: FastifyReply) => {
     const { encrypted, tag } = request.body.data
 
-    const rp = await decriptData(encrypted, util.hexToBytes(tag), process.env.IV_ENCRIPT as string)
+    const rp = await decryptData(encrypted, util.hexToBytes(tag), process.env.IV_ENCRYPT as string)
+    console.log('🚀 ~ rp', rp)
 
     return reply.send({
       data: JSON.parse(rp.data),

@@ -24,7 +24,7 @@ const generateKeyPair = async () => {
   return keypair;
 };
 
-const decriptKeys = (keypair, text) => {
+const decryptKeys = (keypair, text) => {
   // DECRYPT String
   let decrypted = keypair.privateKey.decrypt(
     forge.util.decode64(text),
@@ -55,15 +55,16 @@ createApp({
           'Content-Type': 'application/json'
         }
       });
-      const { encript } = await public.json();
+      const { encrypt } = await public.json();
 
-      const { iv, key } = decriptKeys(keypair, encript);
+      const { iv, key } = decryptKeys(keypair, encrypt);
+      console.log('🚀 ~ onMounted ~ iv, key', iv, key)
 
       asimetricKey.value.aes = key;
       asimetricKey.value.iv = iv;
     });
 
-    const sendDataEncripted = async () => {
+    const sendDataEncrypted = async () => {
       // ENCRYPT the text
 
       const base64StringCodec = encryptedData(
@@ -86,6 +87,6 @@ createApp({
       console.log(await public.json());
     };
 
-    return { login, sendDataEncripted };
+    return { login, sendDataEncrypted };
   }
 }).mount('#app');

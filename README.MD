@@ -22,7 +22,7 @@ dev:watch for compile files of ts with --watch flag and dev for nodemon.
 
 How generate values for .env file:
 
-```BASE_64_KEY_ENCRIPT```
+```BASE_64_KEY_ENCRYPT```
 ```
 import { random, util } from 'forge-node'
 
@@ -31,7 +31,7 @@ console.log(util.bytesToHex(key));
 ```
 <br/>
 
-```IV_ENCRIPT```
+```IV_ENCRYPT```
 ```
 import { random, util } from 'forge-node';
 let iv = random.getBytesSync(16);

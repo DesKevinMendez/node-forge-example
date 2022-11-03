@@ -1,6 +1,6 @@
 import { FastifyError, FastifyRequest, FastifyReply } from 'fastify'
 import keysRoutes from './routes/publicKey'
-import decript from './routes/decript'
+import decrypt from './routes/decrypt'
 import dotenv from 'dotenv';
 
 const fastify = require('fastify')()
@@ -17,5 +17,5 @@ dotenv.config();
 
 fastify.register(require('@fastify/cors'), {})
 fastify.register(keysRoutes, { prefix: 'api/v1' })
-fastify.register(decript, { prefix: 'api/v1' })
+fastify.register(decrypt, { prefix: 'api/v1' })
 fastify.listen({ port: 3000 }, (err: FastifyError) => { console.log(err); })
