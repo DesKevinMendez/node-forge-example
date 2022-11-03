@@ -16,6 +16,14 @@ const encryptedData = (text, key, iv) => {
   return { encrypted, tag };
 };
 
+const generateKeyPair = async () => {
+  let keypair;
+  await forge.pki.rsa.generateKeyPair({ bits: 256, workers: 2 }, (err, k) => {
+    keypair = k;
+  });
+  return keypair;
+};
+
 createApp({
   setup() {
     const login = ref({ email: 'kevin@test.io', password: 'password' });
@@ -25,13 +33,8 @@ createApp({
     });
 
     onMounted(async () => {
-      let keypair;
-      await forge.pki.rsa.generateKeyPair(
-        { bits: 256, workers: 2 },
-        (err, k) => {
-          keypair = k;
-        }
-      );
+      const keypair = await generateKeyPair();
+
       // convert public key to PEM format
       const publicKey = forge.pki.publicKeyToPem(keypair.publicKey);
 
