@@ -1,7 +1,7 @@
 
 import { cipher, util, } from 'node-forge';
 
-export const decriptData = async (encrypted: string, tag: any, iv: any) => {
+export const decriptData = async (encrypted: string, tag: any, iv: string) => {
   let decipher = cipher.createDecipher("AES-GCM", util.hexToBytes((process.env.BASE_64_KEY_ENCRIPT as string)));
 
   decipher.start({

@@ -10,8 +10,7 @@ const encryptedData = (text, key, iv) => {
   cipher.update(forge.util.createBuffer(text));
   cipher.finish();
 
-  let tag = cipher.mode.tag;
-
+  let tag = forge.util.bytesToHex(cipher.mode.tag);
   let encrypted = forge.util.encode64(cipher.output.data);
 
   return { encrypted, tag };
@@ -58,7 +57,7 @@ createApp({
           password: login.value.password
         }),
         asimetricKey.value.aes,
-        asimetricKey.value.iv,
+        asimetricKey.value.iv
       );
 
       const public = await fetch('http://localhost:3000/api/v1/decode', {
