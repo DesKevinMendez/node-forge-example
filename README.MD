@@ -37,3 +37,6 @@ import { random, util } from 'forge-node';
 let iv = random.getBytesSync(16);
 console.log(util.bytesToHex(iv))
 ```
+
+How to get them?
+Open the next link [api/v1/public-key](http://localhost:3000/api/v1/public-key)
